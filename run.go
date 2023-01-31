@@ -1,4 +1,5 @@
 package main
+
 import (
 	"context"
 	"encoding/base64"
@@ -9,12 +10,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
 	cpy "github.com/otiai10/copy"
 	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
+
 // Run implements the chaincode launcher on Kubernetes whose function is implemented after
 // https://github.com/hyperledger/fabric/blob/v2.2.1/integration/externalbuilders/golang/bin/run
 func Run(ctx context.Context, cfg Config) error {
@@ -191,7 +195,7 @@ func createChaincodePod(ctx context.Context,
 	}
 	// Get peer Pod
 	myself, _ := os.Hostname()
-	myselfPod, err := clientset.CoreV1().Pods(cfg.Namespace).Get(ctx, myself, metav1.GetOptions{})
+	myselfPod, err := getCCPod(clientset, ctx, cfg, myself)
 	if err != nil {
 		return nil, errors.Wrap(err, "getting myself Pod")
 	}
@@ -300,7 +304,7 @@ func createChaincodePod(ctx context.Context,
 		},
 	}
 	// delete pods in state "Completed", "Failed" or "Terminating"
-	existingCCPod, err := clientset.CoreV1().Pods(cfg.Namespace).Get(ctx, podname, metav1.GetOptions{})
+	existingCCPod, err := getCCPod(clientset, ctx, cfg, podname)
 	if existingCCPod != nil && (existingCCPod.Status.Phase == apiv1.PodFailed || existingCCPod.Status.Phase == apiv1.PodSucceeded || (len(existingCCPod.Status.ContainerStatuses) > 0 && existingCCPod.Status.ContainerStatuses[0].State.Terminated != nil)) {
 		err := clientset.CoreV1().Pods(cfg.Namespace).Delete(ctx, podname, metav1.DeleteOptions{})
 		if err != nil {
@@ -308,4 +312,8 @@ func createChaincodePod(ctx context.Context,
 		}
 	}
 	return clientset.CoreV1().Pods(cfg.Namespace).Create(ctx, pod, metav1.CreateOptions{})
+}
+
+func getCCPod(client *kubernetes.Clientset, ctx context.Context, cfg Config, podIdentifier string) (*apiv1.Pod, error) {
+	return client.CoreV1().Pods(cfg.Namespace).Get(ctx, podIdentifier, metav1.GetOptions{})
 }

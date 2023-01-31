@@ -9,8 +9,8 @@ transfer_volume:
 builder:
   resources:
     memory_limit: "0.5G"
-    cpu_limit: "0.2"
+    cpu_limit: "1"
 launcher:
   resources:
     memory_limit: "0.5G"
-    cpu_limit: "0.2"
+    cpu_limit: "1"

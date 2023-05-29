@@ -1,16 +1,16 @@
 ---
 images:
-  golang: "hyperledger/fabric-ccenv:2.4.8"
-  java: "hyperledger/fabric-javaenv:2.4.8"
-  node: "hyperledger/fabric-nodeenv:2.4.8"
+  golang: "hyperledger/fabric-ccenv:2.5.1"
+  java: "hyperledger/fabric-javaenv:2.5.1"
+  node: "hyperledger/fabric-nodeenv:2.5.1"
 transfer_volume:
   path: "/var/lib/k8scc/transfer/"
   claim: "k8scc-transfer-pv"
 builder:
   resources:
     memory_limit: "0.5G"
-    cpu_limit: "1"
+    cpu_limit: ""
 launcher:
   resources:
     memory_limit: "0.5G"
-    cpu_limit: "1"
+    cpu_limit: ""

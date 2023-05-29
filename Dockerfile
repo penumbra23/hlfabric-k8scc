@@ -9,7 +9,9 @@ RUN go build -o /bin/externalcc .
 
 
 FROM hyperledger/fabric-peer:2.5.1
-RUN apk --no-cache add patch
+RUN apt-get update && apt-get install patch && apt-get clean autoclean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Install external cc
 COPY k8scc.yaml /opt/k8scc/k8scc.yaml

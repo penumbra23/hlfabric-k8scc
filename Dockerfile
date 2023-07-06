@@ -8,7 +8,7 @@ RUN go env
 RUN go build -o /bin/externalcc .
 
 
-FROM hyperledger/fabric-peer:2.5.1
+FROM hyperledger/fabric-peer:2.5.3
 RUN apt-get update && apt-get install patch && apt-get clean autoclean && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/

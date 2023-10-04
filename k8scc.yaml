@@ -1,8 +1,8 @@
 ---
 images:
-  golang: "hyperledger/fabric-ccenv:2.5.3"
-  java: "hyperledger/fabric-javaenv:2.5.3"
-  node: "hyperledger/fabric-nodeenv:2.5.3"
+  golang: "hyperledger/fabric-ccenv:3.0.0-preview"
+  java: "hyperledger/fabric-javaenv:3.0.0-preview"
+  node: "hyperledger/fabric-nodeenv:3.0.0-preview"
 transfer_volume:
   path: "/var/lib/k8scc/transfer/"
   claim: "k8scc-transfer-pv"
